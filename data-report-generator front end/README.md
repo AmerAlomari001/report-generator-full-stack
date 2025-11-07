@@ -1,59 +1,155 @@
-# DataReportGenerator
+AI-Powered Data Report Generator
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.4.
+A full-stack web application that enables users to upload structured data files (CSV or Excel), analyze them with a local AI model, and generate meaningful reports.
+The application supports viewing, chart visualization, and PDF export of generated reports — all running completely locally.
 
-## Development server
+🚀 Project Overview
 
-To start a local development server, run:
+The AI-Powered Data Report Generator combines an Angular frontend with a Node.js backend to provide a seamless experience for:
 
-```bash
+Uploading and previewing CSV data
+
+Sending custom text prompts to a local AI model
+
+Generating analytical summaries and data insights
+
+Displaying reports with charts
+
+Exporting results as downloadable PDFs
+
+
+🧩 Tech Stack
+Layer	Technology
+Frontend	Angular, TypeScript, HTML, SCSS, JavaScript
+Backend	Node.js (Express)
+Styling	Bootstrap
+Charts	Chart.js
+PDF Generation	jsPDF
+Database  MySQL
+
+
+
+⚙️ Features
+
+🔐 Authentication: Login and Signup pages for user access
+
+📤 Data Upload: Upload CSV or Excel files
+
+👁️ CSV Preview: Preview uploaded dataset before processing
+
+💬 Prompt Input: Enter text prompts to guide AI report generation
+
+📈 Data Visualization: View charts and summaries using Chart.js
+
+🧾 Report Page: Display AI-generated insights and summaries
+
+💾 Report History: Review previously generated reports
+
+📄 PDF Export: Save reports locally as PDF files
+
+
+
+
+🧠 How It Connects to the Backend
+
+The frontend sends uploaded files and text prompts via HTTP POST requests to the Node.js backend.
+
+The backend parses the data, interacts with a local AI model, and returns the generated report as JSON.
+
+The frontend then displays the report, visualizes data, and enables PDF export.
+
+All communication happens through RESTful API endpoints (http://localhost:3000/api/report).
+
+
+
+
+🖥️ Installation & Setup
+1. Prerequisites
+
+Make sure you have the following installed:
+
+Node.js (v18+ recommended)
+npm
+Angular CLI.
+2. Clone the Repository
+git clone https://github.com/AmerAlomari001/report-generator-full-stack.git
+cd Data-Report-Generator
+3. Setup Backend
+
+npm install
+npm run dev
+The backend will start at:
+👉 http://localhost:3000
+4. Setup Frontend
+
+npm install
 ng serve
-```
+The frontend will start at:
+👉 http://localhost:4200
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+🔗 Environment Configuration
+Angular uses environment files to define API endpoints:
 
-## Code scaffolding
+src/environments/environment.ts
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+export const environment = {
+  production: false,
+  apiUrl: 'http://localhost:3000'
+};
+src/environments/environment.prod.ts
 
-```bash
-ng generate component component-name
-```
+export const environment = {
+  production: true,
+  apiUrl: 'https://your-production-server.com'
+};
+All HTTP requests reference environment.apiUrl to connect with the backend.
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
 
-```bash
-ng generate --help
-```
+🧾 Usage Guide
 
-## Building
+Login or Register
+Create an account or log in to access the main dashboard.
 
-To build the project run:
+Upload a CSV or Excel file
+Choose your data file and preview its contents.
 
-```bash
-ng build
-```
+Enter a Prompt
+Type a natural language request (e.g., “Summarize sales by region”).
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+Generate Report
+The backend processes the file and prompt through the AI model.
 
-## Running unit tests
+View Report
+See the AI-generated summary and charts in the report view.
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+Download PDF
+Export your report using the “Download as PDF” button (via jsPDF).
 
-```bash
-ng test
-```
+Check History
+Review previously generated reports in the “History” page.
 
-## Running end-to-end tests
+📁 Project Structure
 
-For end-to-end (e2e) testing, run:
+AI-Powered-Data-Report-Generator/
+├── backend/                
+│   ├── routes/
+│   ├── controllers/
+│   └── server.js
+├── frontend/               
+│   ├── src/app/
+│   │   ├── pages/
+│   │   │   ├── login/
+│   │   │   ├── signup/
+│   │   │   ├── upload/
+│   │   │   ├── report/
+│   │   │   ├── history/
+│   │   │   └── chart/
+│   └── src/environments/
 
-```bash
-ng e2e
-```
+🧰 Build and Deployment
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+To build the Angular app for production:
+ng build --prod
+This creates a dist/ folder that can be served by the backend or a static host.
 
-## Additional Resources
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
