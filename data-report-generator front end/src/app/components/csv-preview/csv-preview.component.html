@@ -1,0 +1,24 @@
+<div class="container py-5">
+  <div class="card shadow p-4">
+    <h2 class="mb-4 text-center">CSV / Excel Preview</h2>
+
+    <div class="table-responsive mt-4" *ngIf="rows && rows.length">
+      <table class="table table-bordered table-sm">
+        <thead class="table-secondary">
+          <tr>
+            <th *ngFor="let header of headers">{{ header }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let row of rows">
+            <td *ngFor="let header of headers">{{ row[header] ?? '' }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div *ngIf="!rows || rows.length === 0" class="text-center text-muted">
+      <p>No file selected yet.</p>
+    </div>
+  </div>
+</div>

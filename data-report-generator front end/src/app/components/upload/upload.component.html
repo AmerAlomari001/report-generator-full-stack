@@ -1,0 +1,20 @@
+<div class="card p-3">
+  <h5>Upload CSV / Excel</h5>
+  <div class="mb-3">
+    <input type="file" class="form-control" (change)="onFileChange($event)" accept=".csv, .xlsx, .xls" />
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">Prompt</label>
+    <input class="form-control" [formControl]="prompt" placeholder="Describe the report you want" />
+  </div>
+
+  <div class="mb-3">
+    <button class="btn btn-primary" (click)="sendToAI()">Generate Report</button>
+  </div>
+
+  <div *ngIf="uploadedSummary">
+    <h6>Preview</h6>
+    <app-csv-preview [rows]="uploadedSummary.rows"></app-csv-preview>
+  </div>
+</div>

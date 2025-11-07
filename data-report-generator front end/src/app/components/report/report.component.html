@@ -1,0 +1,34 @@
+<div class="container py-5">
+  <div class="card shadow p-4 text-center">
+    <h2 class="mb-4">Report Details</h2>
+
+    <div *ngIf="loading">
+      <p>⏳ Loading report...</p>
+    </div>
+
+    <div *ngIf="!loading && report">
+      <h5>📌 Prompt</h5>
+      <p class="text-muted">{{ report.prompt }}</p>
+
+      <h5 class="mt-4">📝 AI Generated Report</h5>
+
+      <div class="ai-report text-start">
+        <markdown [data]="reportText"></markdown>
+      </div>
+
+      <div class="d-flex gap-3 mt-4">
+        <a class="btn btn-success flex-grow-1" [href]="pdfUrl" target="_blank" download>⬇️ Download PDF</a>
+        <button class="btn btn-outline-secondary flex-grow-1" (click)="goBack()">🔙 Back to History</button>
+      </div>
+
+      <div class="mt-5" *ngIf="report.chartData">
+        <h5>📊 Chart Visualization</h5>
+        <app-chart [chartSummary]="report.chartData"></app-chart>
+      </div>
+    </div>
+
+    <div *ngIf="!loading && !report" class="text-muted">
+      ⚠️ No report found.
+    </div>
+  </div>
+</div>
