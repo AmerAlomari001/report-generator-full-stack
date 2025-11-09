@@ -28,9 +28,18 @@ export class HistoryComponent implements OnInit {
     });
   }
 
-  viewReport(report: any) {
-  localStorage.setItem('selectedReport', JSON.stringify(report)); // 🆕
-  this.router.navigate(['/report'], { state: { report } });
+  viewReport(id:number){
+  const r = this.rs.getById(id);
+  if (!r) return;
+  const user = this.auth.currentUser();
+  if (user?.role === 'admin') {
+    // ادمن يروح لمنطقة الادمن
+    this.router.navigate(['/admin/reports', id], { state: { report: r } });
+  } else {
+    // يوزر عادي يروح للعرض العادي
+    localStorage.setItem('selectedReport', JSON.stringify(r));
+    this.router.navigate(['/report', id], { state: { report: r } });
+  }
 }
 
 

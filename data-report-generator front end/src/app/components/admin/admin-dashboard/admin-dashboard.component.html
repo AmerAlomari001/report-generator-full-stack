@@ -1,0 +1,30 @@
+<div class="container py-4">
+  <h3>Admin Dashboard</h3>
+
+  <div class="row g-3 mt-3">
+    <div class="col-md-4">
+      <div class="card p-3 shadow-sm">
+        <h6>Total Reports</h6>
+        <h2>{{ total }}</h2>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card p-3 shadow-sm">
+        <h6>Pending</h6>
+        <h2>{{ pending }}</h2>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card p-3 shadow-sm">
+        <h6>Approved</h6>
+        <h2>{{ approved }}</h2>
+      </div>
+    </div>
+  </div>
+
+  <div class="mt-4">
+    <button class="btn btn-outline-primary" (click)="goReports()">Manage Reports</button>
+  </div>
+</div>

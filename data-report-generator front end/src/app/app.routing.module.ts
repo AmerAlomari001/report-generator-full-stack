@@ -15,12 +15,11 @@ const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
   { path: 'signup', component: SignupComponent },
-  { path: 'upload', component: UploadComponent, canActivate: [AuthGuard] },
-{ path: 'report', component: ReportComponent, canActivate: [AuthGuard] },
-  { path: 'history', component: HistoryComponent, canActivate: [AuthGuard] },
-  { path: 'chart', component: ChartComponent, canActivate: [AuthGuard] },
-  { path: 'csv-preview', component: CsvPreviewComponent, canActivate: [AuthGuard] }
-];
+   { path: 'upload', component: UploadComponent, canActivate: [UserGuard] },
+  { path: 'history', component: HistoryComponent, canActivate: [UserGuard] },
+  { path: 'report', component: ReportComponent, canActivate: [UserGuard] },
+
+  { path: 'admin', component: AdminDashboardComponent, canActivate: [AdminGuard] },
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

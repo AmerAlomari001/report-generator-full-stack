@@ -1,0 +1,28 @@
+<div class="container py-4">
+  <button class="btn btn-link mb-2" (click)="back()">← Back</button>
+  <h4>Report Review</h4>
+
+  <div *ngIf="report" class="card p-3 shadow-sm">
+    <h5>{{ report.title }}</h5>
+    <p class="text-muted">{{ report.prompt }}</p>
+    <p>{{ report.report }}</p>
+
+    <div class="mt-3">
+      <label class="form-label">Admin Note</label>
+      <textarea
+        class="form-control"
+        rows="3"
+        [(ngModel)]="note"
+        placeholder="Write your feedback here..."
+      ></textarea>
+
+      <div class="mt-3 d-flex gap-2">
+        <button class="btn btn-success" (click)="approve()">Approve</button>
+        <button class="btn btn-danger" (click)="reject()">Reject</button>
+        <button class="btn btn-outline-secondary" (click)="requestChange()">
+          Request Change
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
