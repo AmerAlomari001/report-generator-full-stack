@@ -1,5 +1,5 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs';
 
@@ -8,38 +8,49 @@ import { Observable } from 'rxjs';
 })
 export class ReportService {
 
-  private baseUrl = `${environment.apiUrl}/api/reports`;
+  private baseUrl = `${environment.apiUrl}/api/reports`;         // for users
+  private adminUrl = `${environment.apiUrl}/api/admin/reports`;  // for admin
 
   constructor(private http: HttpClient) {}
 
   private getAuthHeaders(): HttpHeaders {
     const token = localStorage.getItem('token') || '';
-    console.log("🔍 Token being sent from Angular:", token);
     return new HttpHeaders({
       Authorization: `Bearer ${token}`
     });
   }
 
-  getAll(): Observable<any> {
-    const headers = this.getAuthHeaders();
-    return this.http.get(`${this.baseUrl}/history`, { headers });
+  // ♻️ User
+  getAll(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}/history`, {
+      headers: this.getAuthHeaders()
+    });
   }
 
-  getByEmail(email: string): Observable<any> {
-    const headers = this.getAuthHeaders();
-    return this.http.get(`${this.baseUrl}/email/${email}`, { headers });
+  getById(id: number): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/${id}`, {
+      headers: this.getAuthHeaders()
+    });
   }
 
- getLastReport(): Observable<any> {
-  const headers = this.getAuthHeaders();
-  return this.http.get(`${this.baseUrl}/last`, { headers });
-}
+  deleteReport(id: number): Observable<any> {
+    return this.http.delete(`${this.baseUrl}/${id}`, {
+      headers: this.getAuthHeaders()
+    });
+  }
 
-delete(id: number): Observable<any> {
-  const headers = this.getAuthHeaders();
-  return this.http.delete(`${this.baseUrl}/${id}`, { headers });
-}
+  // 👑 Admin
+  getAllAdmin(): Observable<any[]> {
+    return this.http.get<any[]>(this.adminUrl, {
+      headers: this.getAuthHeaders()
+    });
+  }
 
+  deleteAdminReport(id: number): Observable<any> {
+    return this.http.delete(`${this.adminUrl}/${id}`, {
+      headers: this.getAuthHeaders()
+    });
+  }
 
   getReportPdf(pdfPath: string): string {
     return `${environment.apiUrl}${pdfPath}`;

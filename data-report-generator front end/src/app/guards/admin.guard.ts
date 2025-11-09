@@ -3,11 +3,12 @@ import { CanActivate, Router } from '@angular/router';
 import { AuthService } from '../serviecs/auth.service';
 
 @Injectable({ providedIn: 'root' })
-export class AuthGuard implements CanActivate {
+export class AdminGuard implements CanActivate {
   constructor(private auth: AuthService, private router: Router) {}
   canActivate(): boolean {
-    if (this.auth.isLoggedIn()) return true;
-    this.router.navigate(['/login']);
+    if (this.auth.isLoggedIn() && this.auth.isAdmin()) return true;
+    // لو مو admin نحوله لصفحة مخصصة أو ال-home
+    this.router.navigate(['/']);
     return false;
   }
 }

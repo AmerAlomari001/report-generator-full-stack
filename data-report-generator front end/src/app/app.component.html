@@ -1,20 +1,26 @@
+<!-- Navbar يظهر بس إذا مش صفحة Login أو Signup -->
 <nav *ngIf="router.url !== '/login' && router.url !== '/signup'" class="navbar navbar-expand-lg navbar-dark bg-primary">
   <div class="container">
     <a class="navbar-brand" routerLink="/">AI Reporter</a>
+    
     <div class="collapse navbar-collapse">
-      <ul class="navbar-nav ms-auto">
+      <ul class="navbar-nav me-auto">
         <li class="nav-item"><a class="nav-link" routerLink="/upload">Upload</a></li>
         <li class="nav-item"><a class="nav-link" routerLink="/history">History</a></li>
-       <li class="nav-item">
-          <a class="nav-link" (click)="logout()" style="cursor:pointer;" title="Logout">
-            <i class="bi bi-box-arrow-right"></i>
-          </a>
-        </li>
+        <!-- يظهر فقط للادمن -->
+        <li class="nav-item" *ngIf="auth.isAdmin()"><a class="nav-link" routerLink="/admin/dashboard">Admin</a></li>
       </ul>
+
+      <div class="d-flex">
+        <!-- Login يظهر إذا ما في يوزر مسجل -->
+        <button *ngIf="!auth.isLoggedIn()" class="btn btn-outline-light me-2" routerLink="/login">Login</button>
+
+        <!-- Logout يظهر إذا في يوزر مسجل -->
+        <button *ngIf="auth.isLoggedIn()" class="btn btn-outline-light" (click)="logout()">Logout</button>
+      </div>
     </div>
   </div>
 </nav>
 
-<div class="container my-4">
-  <router-outlet></router-outlet>
-</div>
+<!-- المحتوى الرئيسي للصفحات -->
+<router-outlet></router-outlet>

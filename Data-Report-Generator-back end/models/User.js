@@ -12,6 +12,14 @@ const UserModel = {
 
     return result.insertId;
   },
+  
+  deleteuserById: async (id) => {
+    const [result] = await pool.query(
+      `DELETE FROM users WHERE id = ?`,
+      [id]
+    );
+    return result.affectedRows > 0; // true لو انحذف، false لو ما لقى المستخدم
+  },
 
   findByEmail: async (email) => {
     const [rows] = await pool.query(
@@ -20,6 +28,13 @@ const UserModel = {
     );
 
     return rows[0]; // بترجع أول نتيجة (إن وجدت)
+  },
+  findById: async (id) => {
+    const [rows] = await pool.query(
+      `SELECT * FROM users WHERE id = ?`,
+      [id]
+    );
+    return rows[0]; // يرجع أول سجل، أو undefined لو ما لقى إشي
   },
 };
 

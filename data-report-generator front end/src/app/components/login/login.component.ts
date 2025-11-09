@@ -22,7 +22,15 @@ export class LoginComponent {
     if (this.loginForm.invalid) return;
     const { email, password } = this.loginForm.value;
     this.auth.login(email!, password!).subscribe({
-      next: () => this.router.navigate(['/upload']),
+      next: () => {
+  const role = localStorage.getItem('role');
+  if (role === 'admin') {
+    this.router.navigate(['/admin']);
+  } else {
+    this.router.navigate(['/upload']);
+  }
+},
+
       error: () => alert('Invalid credentials')
     });
   }

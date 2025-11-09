@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartData, ChartOptions } from 'chart.js';
 
-// ✅ تسجيل أنواع الرسم المطلوب استخدامها (Bar, Pie, إلخ)
+
 import {
   Chart,
   BarController,
@@ -16,7 +16,7 @@ import {
   Legend,
 } from 'chart.js';
 
-// تسجيل الأنواع وإضافتها للـ Chart.js
+
 Chart.register(
   BarController,
   BarElement,

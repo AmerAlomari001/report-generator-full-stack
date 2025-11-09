@@ -13,5 +13,7 @@ router.patch("/users/role/:id", authenticateToken, adminOnly, AdminController.up
 router.get("/reports", authenticateToken, adminOnly, AdminController.getAllReports);
 
 router.delete("/reports/:id", authenticateToken, adminOnly, AdminController.deleteReport);
+router.delete("/users/:id", authenticateToken, adminOnly, AdminController.deleteUser);
+
 
 module.exports = router;

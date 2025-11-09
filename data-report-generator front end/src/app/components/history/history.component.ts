@@ -13,6 +13,7 @@ import { environment } from '../../../environments/environment';
 })
 export class HistoryComponent implements OnInit {
   reports: any[] = [];
+  auth: any;
 
   constructor(private rs: ReportService, private router: Router) {}
 
@@ -30,15 +31,25 @@ export class HistoryComponent implements OnInit {
 }
 
 
-  viewReport(report: any) {
-    localStorage.setItem('selectedReport', JSON.stringify(report));
-    this.router.navigate(['/report'], { state: { report } });
+  viewReport(id:number){
+  const r = this.rs.getById(id);
+  if (!r) return;
+  const user = this.auth.currentUser();
+  if (user?.role === 'admin') {
+    // ادمن يروح لمنطقة الادمن
+    this.router.navigate(['/admin/reports', id], { state: { report: r } });
+  } else {
+    // يوزر عادي يروح للعرض العادي
+    localStorage.setItem('selectedReport', JSON.stringify(r));
+    this.router.navigate(['/report', id], { state: { report: r } });
   }
+}
+
 
  deleteReport(id: number) {
   if (!confirm('Are you sure you want to delete this report?')) return;
 
-  this.rs.delete(id).subscribe({
+  this.rs.deleteReport(id).subscribe({
     next: () => {
       // 🧹 احذف من الواجهة مباشرة بدون إعادة تحميل كامل
       this.reports = this.reports.filter(r => r.id !== id);
@@ -57,6 +68,7 @@ export class HistoryComponent implements OnInit {
   });
 
   }
+
 
   getPdfUrl(pdfPath: string): string {
     return `${environment.apiUrl}${pdfPath}`;

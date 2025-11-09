@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 
 import { Router } from '@angular/router';
+import { AuthService } from './serviecs/auth.service';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -8,8 +9,10 @@ import { Router } from '@angular/router';
 })
 export class AppComponent {  title = 'data-report-generator2';
 
-   constructor(public router: Router) {}
-    logout() {
-    this.router.navigate(['/login']); 
+   constructor(public router: Router, public auth: AuthService) {}
+
+  logout() {
+    this.auth.logout();        // 🟢 تحذف التوكن وبيانات اليوزر
+    this.router.navigate(['/login']); // ⚡️ توجه للصفحة Login
   }
 }

@@ -1,0 +1,33 @@
+<div class="container mt-4">
+  <h2 class="mb-3">👥 Users Management</h2>
+
+  <div *ngIf="loading" class="text-center p-4">Loading...</div>
+
+  <table *ngIf="!loading" class="table table-bordered table-striped">
+    <thead class="table-dark">
+      <tr>
+        <th>ID</th>
+        <th>Username</th>
+        <th>Email</th>
+        <th>Role</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let u of users">
+        <td>{{ u.id }}</td>
+        <td>{{ u.username }}</td>
+        <td>{{ u.email }}</td>
+        <td>
+          <select class="form-select form-select-sm" [(ngModel)]="u.role" (change)="changeRole(u)">
+            <option value="user">User</option>
+            <option value="admin">Admin</option>
+          </select>
+        </td>
+        <td>
+          <button class="btn btn-danger btn-sm" (click)="deleteUser(u.id)">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
