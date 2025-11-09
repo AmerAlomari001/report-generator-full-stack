@@ -25,6 +25,57 @@ function parseXlsx(filePath) {
   const sheet = workbook.Sheets[sheetName];
   return XLSX.utils.sheet_to_json(sheet);
 }
+function buildChartSummary(fileData) {
+  if (!fileData || !fileData.length) {
+    return {
+      chartTitle: "No data available",
+      chartData: []
+    };
+  }
+
+  let columns = Object.keys(fileData[0]);
+
+  columns = columns.filter(col => !col.startsWith("__EMPTY"));
+
+  const ignoredCols = ["id", "_id", "age", "score", "file_path", "pdf_path", "report"];
+  const candidateCols = columns.filter(col => !ignoredCols.includes(col));
+
+  let selectedCol = null;
+
+  for (const col of candidateCols) {
+    const values = fileData.map(row => row[col]).filter(v => v !== undefined && v !== null && v !== "");
+    const unique = new Set(values);
+
+    if (unique.size > 1 && unique.size <= fileData.length / 2) {
+      selectedCol = col;
+      break;
+    }
+  }
+
+  if (!selectedCol) {
+    selectedCol = candidateCols.find(c => typeof fileData[0][c] === "string") || "Unknown";
+  }
+
+  const counts = {};
+  fileData.forEach(row => {
+    let label = row[selectedCol];
+    if (!label || label === "") label = "Unknown";
+    counts[label] = (counts[label] || 0) + 1;
+  });
+
+  const chartData = Object.entries(counts).map(([label, value]) => ({
+    label,
+    value
+  }));
+
+  return {
+    chartTitle: `Records grouped by ${selectedCol}`,
+    chartData
+  };
+}
+
+
+
 
 async function sendToGemini(prompt) {
   const MODEL = "gemini-2.5-flash"; 
@@ -70,134 +121,10 @@ const COLORS = {
   h3: "#111111",
 };
 
-function registerFonts(doc) {
-  const hasRoboto =
-    fs.existsSync(ROBOTO_REG) && fs.existsSync(ROBOTO_BOLD);
-
-  if (hasRoboto) {
-    doc.registerFont("Body", ROBOTO_REG);
-    doc.registerFont("Bold", ROBOTO_BOLD);
-  } else {
-    
-    doc.registerFont("Body", "Helvetica");
-    doc.registerFont("Bold", "Helvetica-Bold");
-  }
-}
-
-function drawRule(doc) {
-  doc
-    .moveDown(0.5)
-    .moveTo(doc.page.margins.left, doc.y)
-    .lineTo(doc.page.width - doc.page.margins.right, doc.y)
-    .lineWidth(1)
-    .strokeColor(COLORS.rule)
-    .stroke()
-    .moveDown(1);
-}
 
 
-function drawRichLine(doc, line, options = {}) {
-  const parts = line.split(/(\*\*.+?\*\*)/g); 
-  parts.forEach((chunk) => {
-    if (!chunk) return;
-    if (chunk.startsWith("**") && chunk.endsWith("**")) {
-      const text = chunk.slice(2, -2);
-      doc.font("Bold");
-      doc.fillColor(COLORS.text).text(text, { continued: true, ...options });
-      doc.font("Body");
-    } else {
-      doc.fillColor(COLORS.text).text(chunk, { continued: true, ...options });
-    }
-  });
-  doc.text(""); 
-}
 
-function renderMarkdown(doc, markdown) {
-  doc.font("Body").fontSize(12).fillColor(COLORS.text);
 
-  const lines = markdown.split(/\r?\n/);
-  let listIndent = 0;
-
-  lines.forEach((raw) => {
-    const line = raw.trim();
-
-    if (line === "") {
-      doc.moveDown(0.5);
-      return;
-    }
-
-    if (line.startsWith("# ")) {
-      const text = line.replace(/^#\s+/, "");
-      doc.moveDown(0.5);
-      doc
-        .font("Bold")
-        .fontSize(20)
-        .fillColor(COLORS.h1)
-        .text(text, { align: "left" });
-      doc.font("Body").fontSize(12).fillColor(COLORS.text);
-      drawRule(doc);
-      return;
-    }
-
-    if (line.startsWith("## ")) {
-      const text = line.replace(/^##\s+/, "");
-      doc.moveDown(0.3);
-      doc
-        .font("Bold")
-        .fontSize(16)
-        .fillColor(COLORS.h2)
-        .text(text);
-      doc.font("Body").fontSize(12).fillColor(COLORS.text);
-      doc.moveDown(0.4);
-      return;
-    }
-
-    if (line.startsWith("### ")) {
-      const text = line.replace(/^###\s+/, "");
-      doc
-        .font("Bold")
-        .fontSize(14)
-        .fillColor(COLORS.h3)
-        .text(text);
-      doc.font("Body").fontSize(12).fillColor(COLORS.text);
-      doc.moveDown(0.25);
-      return;
-    }
-
-    if (line.startsWith("* ") || line.startsWith("- ")) {
-      const text = line.replace(/^[\*\-]\s+/, "");
-      const x = doc.x; 
-      doc
-        .circle(x + 3, doc.y + 6, 1.6)
-        .fillColor(COLORS.bullet)
-        .fill();
-      doc
-        .fillColor(COLORS.text)
-        .text("  " + text, x + 12, doc.y - 4, { align: "left" });
-      return;
-    }
-
-    if (line.startsWith("  * ") || line.startsWith("  - ")) {
-      const text = line.replace(/^\s+[\*\-]\s+/, "");
-      const x = doc.x + 14;
-      doc
-        .circle(x + 3, doc.y + 6, 1.3)
-        .fillColor(COLORS.bullet)
-        .fill();
-      doc
-        .fillColor(COLORS.text)
-        .text("  " + text, x + 10, doc.y - 4);
-      return;
-    }
-
-    if (/^---+$/.test(line)) {
-      drawRule(doc);
-      return;
-    }
-
-    drawRichLine(doc, line);
-  });
-}
 
 
 function createPDF(markdownText, title = "Generated Report") {
@@ -291,6 +218,8 @@ const ReportController = {
       }
 
       const jsonData = JSON.stringify(fileData, null, 2);
+const chartSummary = buildChartSummary(fileData);
+
      const finalPrompt = `${userPrompt}
 
 Here is the uploaded dataset (as JSON):
@@ -314,6 +243,8 @@ Return ONLY markdown text.
 
       const reportText = await sendToGemini(finalPrompt);
       const pdfPath = await createPDF(reportText);
+      console.log("📝 First row of fileData:", fileData[0]);
+
       const userEmail = req.user.email;
 
      const pdfUrl = `/downloads/${path.basename(pdfPath)}`;
@@ -325,6 +256,7 @@ const id = await ReportModel.createReport({
   filePath: req.file.path,
   pdfPath: pdfUrl,  
   email: userEmail,
+  chartData: chartSummary, 
 });
 
 
@@ -353,25 +285,7 @@ getReportHistory: async (req, res) => {
     });
   }
 },
-  getReportsByEmail: async (req, res) => {
-    try {
-      const email = req.params.email;
-      const reports = await ReportModel.getReports(email);
-
-      if (!reports || reports.length === 0) {
-        return res.status(404).json({ message: "No reports found for this email" });
-      }
-
-      res.json(reports);
-    } catch (err) {
-      console.error("❌ Error in getReportsByEmail:", err);
-      res.status(500).json({
-        error: "Failed to fetch reports by email",
-        detail: err.stack || err.message,
-      });
-    }
-  },
-
+ 
   deleteReport: async (req, res) => {
     try {
       const { id } = req.params;

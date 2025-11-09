@@ -29,10 +29,24 @@ export class HistoryComponent implements OnInit {
   }
 
   viewReport(report: any) {
-  localStorage.setItem('selectedReport', JSON.stringify(report)); // 🆕
-  this.router.navigate(['/report'], { state: { report } });
-}
+    localStorage.setItem('selectedReport', JSON.stringify(report));
+    this.router.navigate(['/report'], { state: { report } });
+  }
 
+  deleteReport(id: number) {
+    if (confirm('Are you sure you want to delete this report?')) {
+      this.rs.delete(id).subscribe(
+        () => {
+          alert('✅ Report deleted successfully');
+          this.loadReports(); // إعادة تحميل القائمة بعد الحذف
+        },
+        (error) => {
+          console.error('❌ Error deleting report:', error);
+          alert('Failed to delete the report.');
+        }
+      );
+    }
+  }
 
   getPdfUrl(pdfPath: string): string {
     return `${environment.apiUrl}${pdfPath}`;

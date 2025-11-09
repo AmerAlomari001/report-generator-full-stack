@@ -16,7 +16,7 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'signup', component: SignupComponent },
   { path: 'upload', component: UploadComponent, canActivate: [AuthGuard] },
-{ path: 'report', component: ReportComponent, canActivate: [AuthGuard] },
+  { path: 'report', component: ReportComponent, canActivate: [AuthGuard] },
   { path: 'history', component: HistoryComponent, canActivate: [AuthGuard] },
   { path: 'chart', component: ChartComponent, canActivate: [AuthGuard] },
   { path: 'csv-preview', component: CsvPreviewComponent, canActivate: [AuthGuard] }
