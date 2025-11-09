@@ -35,10 +35,11 @@ export class ReportService {
   return this.http.get(`${this.baseUrl}/last`, { headers });
 }
 
-  delete(id: number): Observable<any> {
-    const headers = this.getAuthHeaders();
-    return this.http.delete(`${this.baseUrl}/${id}`, { headers });
-  }
+delete(id: number): Observable<any> {
+  const headers = this.getAuthHeaders();
+  return this.http.delete(`${this.baseUrl}/${id}`, { headers });
+}
+
 
   getReportPdf(pdfPath: string): string {
     return `${environment.apiUrl}${pdfPath}`;

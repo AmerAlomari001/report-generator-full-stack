@@ -92,13 +92,14 @@ async function sendToGemini(prompt) {
         contents: [{ parts: [{ text: prompt }] }],
       },
       {
+        /*نوع البيانات جيسون*/ 
         headers: { "Content-Type": "application/json" },
       }
     );
 
-    const aiText = response.data?.candidates?.[0]?.content?.parts?.[0]?.text || "";
-    if (!aiText) throw new Error("Empty AI response");
-
+   const aiText = response.data?.candidates?.[0]?.content?.parts?.[0]?.text || "";
+if (!aiText) return ""
+return aiText.trim();
     return aiText.trim();
   } catch (err) {
     console.error("🔥 Gemini API error:", err.response?.data || err.message);
@@ -220,24 +221,13 @@ const ReportController = {
       const jsonData = JSON.stringify(fileData, null, 2);
 const chartSummary = buildChartSummary(fileData);
 
-     const finalPrompt = `${userPrompt}
+     const finalPrompt = `
+    ${userPrompt}
 
-Here is the uploaded dataset (as JSON):
-
+Here is the uploaded dataset (in JSON format):
 ${jsonData}
 
-Please generate the response in clean **Markdown format**, including:
-
-### 1. Summary  
-### 2. Unique values  
-### 3. Errors or issues  
-### 4. Insights
-
-Use proper markdown formatting:  
-- Use **bold**, lists (*), headings (###), and spacing  
-- Do NOT wrap the response inside code blocks like \`\`\`
-
-Return ONLY markdown text.
+Return the response in **Markdown format**, only.
 `;
 
 
@@ -286,20 +276,34 @@ getReportHistory: async (req, res) => {
   }
 },
  
-  deleteReport: async (req, res) => {
-    try {
-      const { id } = req.params;
-      const result = await ReportModel.deleteReport(id);
+deleteReport: async (req, res) => {
+  try {
+    const { id } = req.params;
+    const userEmail = req.user.email; 
 
-      return res.json({ message: "Report deleted successfully" });
-    } catch (err) {
-      console.error("❌ Error in deleteReport:", err);
-      res.status(500).json({
-        error: "Failed to delete report",
-        detail: err.stack || err.message,
-      });
+    const report = await ReportModel.getReportById(id);
+
+    console.log("🧪 Report found in DB:", report);
+    console.log("🧪 User email from token:", userEmail);
+    if (!report) {
+      return res.status(404).json({ error: "Report not found" });
     }
+
+    if (report.email !== userEmail) {
+      return res.status(403).json({ error: "Unauthorized to delete this report" });
+    }
+
+    await ReportModel.deleteReport(id);
+
+    return res.json({ message: "Report deleted successfully" });
+  } catch (err) {
+    console.error("❌ Error in deleteReport:", err);
+    res.status(500).json({
+      error: "Failed to delete report",
+      detail: err.stack || err.message,
+    });
   }
+},
 };
 
 module.exports = ReportController;

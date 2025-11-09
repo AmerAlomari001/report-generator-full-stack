@@ -14,5 +14,5 @@ const upload = multer({
 
 router.post("/generate",authenticateToken,upload.single("file"), ReportController.generateReport);
 router.get("/history", authenticateToken, ReportController.getReportHistory);
-router.delete("/:id",ReportController.deleteReport);
+router.delete("/:id",authenticateToken,ReportController.deleteReport);
 module.exports = router;

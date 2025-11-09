@@ -10,6 +10,21 @@ async createReport({ prompt, reportText, filePath, pdfPath, email,chartData  }) 
   const [result] = await pool.query(query, [prompt, reportText, filePath, pdfPath, email,JSON.stringify(chartData)]) //]);
   return result.insertId;
 },
+async getReportById(id) {
+  const [rows] = await pool.query(
+    "SELECT * FROM reports WHERE id = ?",
+    [id]
+  );
+
+  if (!rows.length) return null;
+
+  return {
+    ...rows[0],
+    chartData: typeof rows[0].chart_data === "string" 
+      ? JSON.parse(rows[0].chart_data) 
+      : rows[0].chart_data
+  };
+},
 
  async getReports(email) {
   const [rows] = await pool.query(
@@ -26,19 +41,15 @@ async createReport({ prompt, reportText, filePath, pdfPath, email,chartData  }) 
 },
 
 
-async deleteReport(id) {
-  const [rows] = await pool.query(
-    "SELECT * FROM reports WHERE id = ? ",
-    [id]
-  );
-  
+ async deleteReport(id) {
+    await pool.query("DELETE FROM reports WHERE id = ?", [id]);
+    return true;
+  }
 
-  await pool.query("DELETE FROM reports WHERE id = ?", [id]);
 
-  return true; 
-}
 
 
 };
+
 
 module.exports = ReportModel;
