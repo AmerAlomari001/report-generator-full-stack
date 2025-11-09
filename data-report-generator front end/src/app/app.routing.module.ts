@@ -21,6 +21,14 @@ const routes: Routes = [
 
   { path: 'admin', component: AdminDashboardComponent, canActivate: [AdminGuard] },
 
+  { path: 'upload', component: UploadComponent, canActivate: [AuthGuard] },
+  { path: 'report', component: ReportComponent, canActivate: [AuthGuard] },
+  { path: 'history', component: HistoryComponent, canActivate: [AuthGuard] },
+  { path: 'chart', component: ChartComponent, canActivate: [AuthGuard] },
+  { path: 'csv-preview', component: CsvPreviewComponent, canActivate: [AuthGuard] }
+];
+
+
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]

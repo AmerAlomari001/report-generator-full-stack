@@ -15,7 +15,7 @@ router.post("/register", async (req, res) => {
     if (existingUser)
       return res.status(400).json({ error: "User already exists!" });
 
-
+/**/ 
     const userId = await UserModel.createUser({
       username,
       email,

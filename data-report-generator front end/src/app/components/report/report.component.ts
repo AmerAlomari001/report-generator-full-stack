@@ -54,6 +54,7 @@ export class ReportComponent implements OnInit {
       console.log('✅ PDF URL:', this.pdfUrl);
 
       localStorage.setItem('selectedReport', JSON.stringify(report));
+console.log("📊 Chart Data received:", report.chartData);
 
       this.loading = false;
     }, 1000);

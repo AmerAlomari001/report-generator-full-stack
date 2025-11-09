@@ -1,43 +1,55 @@
-<div class="container py-5">
-  <div class="card shadow p-4">
-    <h2 class="mb-4 text-center">Report History</h2>
+<div class="history-container py-5">
+  <div class="card shadow-lg border-0 rounded-4">
+    <div class="card-header bg-primary text-white text-center py-3 rounded-top">
+      <h2 class="mb-0">📊 Report History</h2>
+    </div>
 
-    <table class="table table-striped" *ngIf="reports && reports.length">
-  <thead class="table-dark">
-    <tr>
-      <th>#</th>
-      <th>Report Name</th>
-      <th>Date</th>
-      <th>Prompt</th>
-      <th>Actions</th>
-      <th>PDF</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let report of reports; let i = index">
-      <td>{{ i + 1 }}</td>
-      <td>{{ report.title || 'Untitled Report' }}</td>
-      <td>{{ report.created_at | date: 'medium' }}</td>
-      <td>{{ report.prompt }}</td>
-      <td>
-        <button 
-          class="btn btn-sm btn-outline-primary me-2" 
-          (click)="viewReport(report)">
-          👁️ View
-        </button>
-      </td>
-      <td>
-        <a *ngIf="report.pdf_path" class="btn btn-sm btn-success" 
-           [href]="getPdfUrl(report.pdf_path)" target="_blank" download>
-          ⬇️ PDF
-        </a>
-      </td>
-    </tr>
-  </tbody>
-</table>
+    <div class="card-body p-4">
+      <table class="table table-hover align-middle" *ngIf="reports && reports.length">
+        <thead class="table-primary">
+          <tr>
+            <th>#</th>
+            <th>Report Name</th>
+            <th>Date Created</th>
+            <th>Prompt</th>
+            <th class="text-center">Actions</th>
+            <th class="text-center">PDF</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let report of reports; let i = index">
+            <td>{{ i + 1 }}</td>
+            <td class="fw-semibold">{{ report.title || 'Untitled Report' }}</td>
+            <td>{{ report.created_at | date: 'medium' }}</td>
+            <td class="text-truncate" style="max-width: 200px;">{{ report.prompt }}</td>
+            <td class="text-center">
+              <button 
+                class="btn btn-sm btn-outline-primary me-2" 
+                (click)="viewReport(report)">
+                👁️ View
+              </button>
 
-    <div *ngIf="!reports || reports.length === 0" class="text-center text-muted">
-      <p>No reports available.</p>
+              <button 
+                class="btn btn-sm btn-outline-danger" 
+                (click)="deleteReport(report.id)">
+                🗑️ Delete
+              </button>
+            </td>
+            <td class="text-center">
+              <a *ngIf="report.pdf_path" 
+                 class="btn btn-sm btn-success px-3" 
+                 [href]="getPdfUrl(report.pdf_path)" 
+                 target="_blank" download>
+                ⬇️ PDF
+              </a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div *ngIf="!reports || reports.length === 0" class="py-4 text-center text-muted">
+        <p class="fs-5">⚠️ No reports available yet.</p>
+      </div>
     </div>
   </div>
 </div>

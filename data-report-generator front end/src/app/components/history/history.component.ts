@@ -13,6 +13,7 @@ import { environment } from '../../../environments/environment';
 })
 export class HistoryComponent implements OnInit {
   reports: any[] = [];
+  auth: any;
 
   constructor(private rs: ReportService, private router: Router) {}
 
