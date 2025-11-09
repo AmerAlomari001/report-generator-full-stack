@@ -1,0 +1,17 @@
+const express = require("express");
+const router = express.Router();
+
+const authenticateToken = require("../middelware/auth");
+const adminOnly = require("../middelware/adminOnly");
+
+const AdminController = require("../controller/admincontroller");
+
+router.get("/users", authenticateToken, adminOnly, AdminController.getAllUsers);
+
+router.patch("/users/role/:id", authenticateToken, adminOnly, AdminController.updateUserRole);
+
+router.get("/reports", authenticateToken, adminOnly, AdminController.getAllReports);
+
+router.delete("/reports/:id", authenticateToken, adminOnly, AdminController.deleteReport);
+
+module.exports = router;

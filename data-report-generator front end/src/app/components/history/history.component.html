@@ -19,7 +19,7 @@
         <tbody>
           <tr *ngFor="let report of reports; let i = index">
             <td>{{ i + 1 }}</td>
-            <td class="fw-semibold">{{ report.title || 'Untitled Report' }}</td>
+            <td class="fw-semibold">{{ report.title || ' Report' }}</td>
             <td>{{ report.created_at | date: 'medium' }}</td>
             <td class="text-truncate" style="max-width: 200px;">{{ report.prompt }}</td>
             <td class="text-center">

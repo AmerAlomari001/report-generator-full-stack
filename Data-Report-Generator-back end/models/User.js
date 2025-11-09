@@ -1,12 +1,16 @@
 const { pool } = require("../db");
 const bcrypt = require("bcryptjs");
+
 const UserModel = {
-  createUser: async ({ username, email, password  }) => {
-     const hashPassword = await bcrypt.hash(password, 10);
+  createUser: async ({ username, email, password }) => {
+    const hashedPassword = await bcrypt.hash(password, 10);
+
     const [result] = await pool.query(
-      `INSERT INTO users (username, email, password ) VALUES (?, ?, ?)`,
-      [username, email,hashPassword ]
+      `INSERT INTO users (username, email, password) VALUES (?, ?, ?)`,
+      [username, email, hashedPassword]
     );
+
+    return result.insertId;
   },
 
   findByEmail: async (email) => {
@@ -14,21 +18,9 @@ const UserModel = {
       `SELECT * FROM users WHERE email = ?`,
       [email]
     );
-    return rows[0];
-  },
 
-  getAllUsers: async () => {
-    const [rows] = await pool.query(`SELECT id, username, email, isApproved FROM users`);
-    return rows;
+    return rows[0]; // بترجع أول نتيجة (إن وجدت)
   },
-
-  approveUser: async (id, status) => {
-    const [result] = await pool.query(
-      `UPDATE users SET isApproved = ? WHERE id = ?`,
-      [status, id]
-    );
-    return result.affectedRows > 0;
-  }
 };
 
 module.exports = UserModel;

@@ -3,7 +3,7 @@ const multer = require("multer");
 const path = require("path");
 const authenticateToken = require("../middelware/auth.js");
 
-const ReportController = require("../controller/report.js");
+const ReportController = require("../controller/reportcontrooler.js");
 
 const router = express.Router();
 
