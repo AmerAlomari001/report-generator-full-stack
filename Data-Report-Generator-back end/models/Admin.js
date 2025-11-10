@@ -12,17 +12,15 @@ const AdminModel = {
     return rows[0];
   },
 
-  // ✅ حذف جميع تقارير هذا المستخدم
   deleteByUser: async (email) => {
     if (email) {
       await pool.query(`DELETE FROM reports WHERE email = ?`, [email]);
     }
   },
 
-  // ✅ حذف المستخدم نفسه من جدول users
   deleteUserById: async (id) => {
     const [result] = await pool.query(`DELETE FROM users WHERE id = ?`, [id]);
-    return result.affectedRows > 0; // يرجع true لو الحذف نجح
+    return result.affectedRows > 0;
   },
 
   updateUserRole: async (id, role) => {
@@ -39,7 +37,16 @@ const AdminModel = {
 
   deleteReportById: async (id) => {
     return pool.query(`DELETE FROM reports WHERE id = ?`, [id]);
-  }
+  },
+
+  // ✅ تحديث حالة الموافقة على المستخدم
+  updateUserApproval: async (id, isApproved) => {
+    const [result] = await pool.query(
+      `UPDATE users SET isApproved = ? WHERE id = ?`,
+      [isApproved, id]
+    );
+    return result.affectedRows > 0;
+  },
 };
 
 module.exports = AdminModel;

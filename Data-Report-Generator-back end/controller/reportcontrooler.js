@@ -13,6 +13,21 @@ const ReportController = {
       });
     }
   },
+    getReportById: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const report = await ReportService.getReportById(id);
+
+      if (!report) {
+        return res.status(404).json({ error: "Report not found" });
+      }
+
+      res.json(report);
+    } catch (error) {
+      console.error("❌ Error fetching report:", error);
+      res.status(500).json({ error: "Failed to fetch report" });
+    }
+  },
 
   getReportHistory: async (req, res) => {
     try {

@@ -9,19 +9,32 @@ const AdminController = {
       res.status(500).json({ error: "Failed to fetch users", detail: error.message });
     }
   },
-deleteUser: async (req, res) => {
-  try {
-    const { id } = req.params;
-    const currentAdminEmail = req.user.email; // ✅ احضر إيميل الأدمن من التوكن
 
-    await AdminService.deleteUserById(id, currentAdminEmail);
-    res.json({ message: "User and their reports deleted successfully" });
-  } catch (err) {
-    console.error("❌ deleteUser error:", err);
-    res.status(err.statusCode || 500).json({ error: err.message });
-  }
-},
+  deleteUser: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const currentAdminEmail = req.user.email;
 
+      await AdminService.deleteUserById(id, currentAdminEmail);
+      res.json({ message: "User and their reports deleted successfully" });
+    } catch (err) {
+      console.error("❌ deleteUser error:", err);
+      res.status(err.statusCode || 500).json({ error: err.message });
+    }
+  },
+
+  approveUser: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { isApproved } = req.body;
+
+      await AdminService.approveUser(id, isApproved);
+      res.json({ message: isApproved ? "✅ User approved successfully" : "❌ User rejected" });
+    } catch (error) {
+      console.error("❌ approveUser error:", error);
+      res.status(500).json({ error: "Failed to update approval", detail: error.message });
+    }
+  },
 
   updateUserRole: async (req, res) => {
     const { id } = req.params;

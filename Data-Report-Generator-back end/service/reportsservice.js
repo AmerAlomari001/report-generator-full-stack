@@ -141,7 +141,13 @@ Return the response in **Markdown format**, only.
   getReportHistory: async (email) => {
     return ReportModel.getReports(email);
   },
-
+ getReportById: async (id) => {
+    const report = await ReportModel.getReportById(id);
+    if (!report) {
+      throw new Error("Report not found");
+    }
+    return report;
+  },
   deleteReport: async (id, userEmail) => {
     const report = await ReportModel.getReportById(id);
     if (!report) throw new Error("Report not found");

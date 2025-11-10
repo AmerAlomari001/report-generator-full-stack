@@ -10,6 +10,7 @@
         <th>Username</th>
         <th>Email</th>
         <th>Role</th>
+        <th>Status</th>
         <th>Actions</th>
       </tr>
     </thead>
@@ -18,14 +19,54 @@
         <td>{{ u.id }}</td>
         <td>{{ u.username }}</td>
         <td>{{ u.email }}</td>
+
         <td>
           <select class="form-select form-select-sm" [(ngModel)]="u.role" (change)="changeRole(u)">
             <option value="user">User</option>
             <option value="admin">Admin</option>
           </select>
         </td>
+
+        <!-- ✅ حالة الموافقة -->
         <td>
-          <button class="btn btn-danger btn-sm" (click)="deleteUser(u.id)">Delete</button>
+          <span 
+            class="badge" 
+            [ngClass]="{
+              'bg-secondary': u.isApproved === 0,
+              'bg-success': u.isApproved === 1,
+              'bg-danger': u.isApproved === -1
+            }">
+            {{
+              u.isApproved === 0
+                ? 'Pending'
+                : u.isApproved === 1
+                ? 'Approved'
+                : 'Rejected'
+            }}
+          </span>
+        </td>
+
+        <td>
+          <!-- ✅ أزرار التحكم -->
+          <button
+            *ngIf="u.isApproved === 0"
+            class="btn btn-success btn-sm me-2"
+            (click)="approveUser(u.id, true)">
+            Approve
+          </button>
+
+          <button
+            *ngIf="u.isApproved === 0"
+            class="btn btn-warning btn-sm me-2"
+            (click)="approveUser(u.id, false)">
+            Reject
+          </button>
+
+          <button
+            class="btn btn-danger btn-sm"
+            (click)="deleteUser(u.id)">
+            Delete
+          </button>
         </td>
       </tr>
     </tbody>

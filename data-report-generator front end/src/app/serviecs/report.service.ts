@@ -16,12 +16,13 @@ export class ReportService {
 
   //  تجهيز الـ Headers مع التوكن
 
-  private getAuthHeaders(): HttpHeaders {
-    const token = localStorage.getItem('token') || '';
-    return new HttpHeaders({
-      Authorization: `Bearer ${token}`
-    });
-  }
+ private getAuthHeaders(): HttpHeaders {
+  const token = localStorage.getItem('token');
+  return new HttpHeaders({
+    Authorization: `Bearer ${token}`
+  });
+}
+
 
 
   
@@ -39,28 +40,30 @@ export class ReportService {
     });
   }
 
-  getLastReport(): Observable<Report> {
+  getLastReport(): Observable<any> {
     return this.http.get(`${this.baseUrl}/last`, {
       headers: this.getAuthHeaders()
     });
   }
 
  
-  getById(id: number): Observable<Report> {
-    return this.http.get<any>(`${this.baseUrl}/${id}`, {
-     headers: this.getAuthHeaders()
-    });
-  }
+ getById(id: number): Observable<Report> {
+  return this.http.get<Report>(`${this.baseUrl}/${id}`, {
+    headers: this.getAuthHeaders()
+  });
+}
+
+  
 
 
   //  إضافة تقرير جديد
-  add(report: Report): Observable<Report> {
+  add(report: Report): Observable<any> {
     return this.http.post(this.baseUrl, report, {
       headers: this.getAuthHeaders()
     });
   }
 
-  update(report: Report): Observable<Report> {
+  update(report: Report): Observable<any> {
     return this.http.put(`${this.baseUrl}/${report.id}`, report, {
       headers: this.getAuthHeaders()
     });

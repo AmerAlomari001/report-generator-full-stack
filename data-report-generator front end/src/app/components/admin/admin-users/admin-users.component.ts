@@ -6,13 +6,13 @@ import { UserService } from '../../../services/user.service';
 @Component({
   selector: 'app-admin-users',
   standalone: true,
-  imports: [CommonModule, FormsModule], 
+  imports: [CommonModule, FormsModule],
   templateUrl: './admin-users.component.html',
   styleUrls: ['./admin-users.component.scss']
 })
 export class AdminUsersComponent implements OnInit {
   users: any[] = [];
-  loading = true; 
+  loading = true;
 
   constructor(private userService: UserService) {}
 
@@ -34,11 +34,18 @@ export class AdminUsersComponent implements OnInit {
     });
   }
 
+  approveUser(id: number, status: boolean) {
+    this.userService.approveUser(id, status).subscribe(() => {
+      console.log(status ? "✅ User approved" : "❌ User rejected");
+      this.loadUsers();
+    });
+  }
+
   deleteUser(id: number) {
     if (confirm("Are you sure you want to delete this user?")) {
       this.userService.deleteUser(id).subscribe(() => {
         console.log("🗑️ User deleted");
-        this.loadUsers();   
+        this.loadUsers();
       });
     }
   }

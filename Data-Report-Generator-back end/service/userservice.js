@@ -5,7 +5,7 @@ const UserModel = require("../models/User");
 require("dotenv").config();
 
 const UserService = {
-  register: async ({ username, email, password }) => {
+  register: async ({ username, email, password, role }) => {
     if (!username || !email || !password) {
       throw new Error("All fields are required");
     }
@@ -23,9 +23,18 @@ const UserService = {
       throw new Error("User already exists");
     }
 
-    await UserModel.createUser({ username, email, password });
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-    return { message: "User registered successfully" };
+    await UserModel.createUser({
+      username,
+      email,
+      password: hashedPassword,
+      role: role || "user",
+    });
+
+    return {
+      message: "Account created successfully!",
+    };
   },
 
   login: async ({ email, password }) => {
@@ -52,7 +61,12 @@ const UserService = {
     return {
       message: "Login successful",
       token,
-      user: { id: user.id, username: user.username, role: user.role },
+      user: {
+        id: user.id,
+        username: user.username,
+        email: user.email,
+        role: user.role,
+      },
     };
   },
 };

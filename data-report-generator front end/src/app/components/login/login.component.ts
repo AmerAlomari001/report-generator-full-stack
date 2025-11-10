@@ -16,22 +16,35 @@ export class LoginComponent {
     password: new FormControl('', Validators.required)
   });
 
+  loading = false;
+
   constructor(private auth: AuthService, private router: Router) {}
 
   onLogin() {
     if (this.loginForm.invalid) return;
-    const { email, password } = this.loginForm.value;
-    this.auth.login(email!, password!).subscribe({
-      next: () => {
-  const role = localStorage.getItem('role');
-  if (role === 'admin') {
-    this.router.navigate(['/admin']);
-  } else {
-    this.router.navigate(['/upload']);
-  }
-},
 
-      error: () => alert('Invalid credentials')
+    const { email, password } = this.loginForm.value;
+    this.loading = true;
+
+    this.auth.login(email!, password!).subscribe({
+      next: (res: any) => {
+        this.loading = false;
+
+        localStorage.setItem('token', res.token);
+        localStorage.setItem('user', JSON.stringify(res.user));
+        localStorage.setItem('role', res.user.role);
+
+        if (res.user.role === 'admin') {
+          this.router.navigate(['/admin']);
+        } else {
+          this.router.navigate(['/upload']);
+        }
+      },
+      error: (err) => {
+        this.loading = false;
+        console.error(err);
+        alert(err.error?.message || '❌ Invalid credentials');
+      }
     });
   }
 }

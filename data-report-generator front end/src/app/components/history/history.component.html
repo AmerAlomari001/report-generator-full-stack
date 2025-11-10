@@ -19,13 +19,14 @@
         <tbody>
           <tr *ngFor="let report of reports; let i = index">
             <td>{{ i + 1 }}</td>
-            <td class="fw-semibold">{{ report.title || ' Report' }}</td>
+            <td class="fw-semibold">{{ report.title || 'Report' }}</td>
             <td>{{ report.created_at | date: 'medium' }}</td>
             <td class="text-truncate" style="max-width: 200px;">{{ report.prompt }}</td>
+
             <td class="text-center">
               <button 
                 class="btn btn-sm btn-outline-primary me-2" 
-                (click)="viewReport(report)">
+                (click)="viewReport(report.id)">
                 👁️ View
               </button>
 
@@ -35,10 +36,11 @@
                 🗑️ Delete
               </button>
             </td>
+
             <td class="text-center">
-              <a *ngIf="report.pdf_path" 
+              <a *ngIf="report.pdfPath" 
                  class="btn btn-sm btn-success px-3" 
-                 [href]="getPdfUrl(report.pdf_path)" 
+                 [href]="getPdfUrl(report.pdfPath)" 
                  target="_blank" download>
                 ⬇️ PDF
               </a>

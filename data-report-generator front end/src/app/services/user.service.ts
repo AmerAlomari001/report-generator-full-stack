@@ -33,9 +33,16 @@ export class UserService {
     });
   }
 
-  // ✅ حذف مستخدم (اختياري)
+  // ✅ حذف مستخدم
   deleteUser(id: number): Observable<any> {
     return this.http.delete(`${this.baseUrl}/${id}`, {
+      headers: this.getAuthHeaders()
+    });
+  }
+
+  // ✅ الموافقة أو الرفض على المستخدم (أدمن فقط)
+  approveUser(id: number, status: boolean): Observable<any> {
+    return this.http.patch(`${this.baseUrl}/${id}/approve`, { isApproved: status }, {
       headers: this.getAuthHeaders()
     });
   }

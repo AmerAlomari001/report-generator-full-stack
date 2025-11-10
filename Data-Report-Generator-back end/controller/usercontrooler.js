@@ -12,6 +12,7 @@ const UserController = {
 
   login: async (req, res) => {
     try {
+        
       const data = await UserService.login(req.body);
       res.json(data);
     } catch (error) {
