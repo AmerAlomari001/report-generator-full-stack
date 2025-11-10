@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs';
-
+import { Report } from '../models/report.model';
 @Injectable({
   providedIn: 'root'
 })
@@ -12,7 +12,7 @@ export class ReportService {
 
   constructor(private http: HttpClient) {}
 
-  // 🔐 تجهيز الـ Headers مع التوكن
+  //  تجهيز الـ Headers مع التوكن
   private getAuthHeaders(): HttpHeaders {
     const token = localStorage.getItem('token') || '';
     return new HttpHeaders({
@@ -20,56 +20,49 @@ export class ReportService {
     });
   }
 
-  // 🟢 جلب كل التقارير
-  getAll(): Observable<any> {
+  getAll(): Observable<Report> {
     return this.http.get(`${this.baseUrl}/history`, {
       headers: this.getAuthHeaders()
     });
   }
 
-  // 🟢 جلب تقرير حسب الإيميل
   getByEmail(email: string): Observable<any> {
     return this.http.get(`${this.baseUrl}/email/${email}`, {
       headers: this.getAuthHeaders()
     });
   }
 
-  // 🟢 جلب آخر تقرير
-  getLastReport(): Observable<any> {
+  getLastReport(): Observable<Report> {
     return this.http.get(`${this.baseUrl}/last`, {
       headers: this.getAuthHeaders()
     });
   }
 
-  // 🟢 جلب تقرير حسب الـ ID
-  getById(id: number): Observable<any> {
+  getById(id: number): Observable<Report> {
     return this.http.get(`${this.baseUrl}/${id}`, {
       headers: this.getAuthHeaders()
     });
   }
 
-  // 🟡 إضافة تقرير جديد
-  add(report: any): Observable<any> {
+  //  إضافة تقرير جديد
+  add(report: Report): Observable<Report> {
     return this.http.post(this.baseUrl, report, {
       headers: this.getAuthHeaders()
     });
   }
 
-  // 🔵 تعديل تقرير موجود
-  update(report: any): Observable<any> {
+  update(report: Report): Observable<Report> {
     return this.http.put(`${this.baseUrl}/${report.id}`, report, {
       headers: this.getAuthHeaders()
     });
   }
 
-  // 🔴 حذف تقرير
   delete(id: number): Observable<any> {
     return this.http.delete(`${this.baseUrl}/${id}`, {
       headers: this.getAuthHeaders()
     });
   }
 
-  // 📄 عرض ملف الـ PDF الخاص بالتقرير
   getReportPdf(pdfPath: string): string {
     return `${environment.apiUrl}${pdfPath}`;
   }

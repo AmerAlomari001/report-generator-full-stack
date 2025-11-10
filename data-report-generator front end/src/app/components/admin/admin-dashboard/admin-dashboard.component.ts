@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { ReportService } from '../../serviecs/report.service';
@@ -10,16 +10,24 @@ import { ReportService } from '../../serviecs/report.service';
   templateUrl: './admin-dashboard.component.html',
   styleUrls: ['./admin-dashboard.component.scss']
 })
-export class AdminDashboardComponent {
+export class AdminDashboardComponent implements OnInit {
   total = 0;
   pending = 0;
   approved = 0;
 
-  constructor(private rs: ReportService, private router: Router) {
-    const list = this.rs.getAll();
-    this.total = list.length;
-    this.pending = list.filter(r => r.status === 'pending').length;
-    this.approved = list.filter(r => r.status === 'approved').length;
+  constructor(private rs: ReportService, private router: Router) {}
+
+  ngOnInit() {
+    this.rs.getAll().subscribe({
+      next: (reports:any) => {
+        this.total = reports.length;
+        this.pending = reports.filter((r: any) => r.status === 'pending').length;
+        this.approved = reports.filter((r: any) => r.status === 'approved').length;
+      },
+      error: (err:Error) => {
+        console.error('❌ Error loading reports:', err);
+      }
+    });
   }
 
   goReports() {

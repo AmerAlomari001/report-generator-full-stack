@@ -13,7 +13,7 @@ import { FormsModule } from '@angular/forms';
 })
 export class AdminReportsComponent implements OnInit {
   list: any[] = [];
-  filter = '';
+  filter: 'pending' | 'approved' | 'rejected' | 'needs_change' | '' = '';
 
   constructor(private rs: ReportService, private router: Router) {}
 

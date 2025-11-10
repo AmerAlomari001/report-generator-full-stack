@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ReportService } from '../../serviecs/report.service';
-
+import { Report } from '../../models/report.model';
 @Component({
   selector: 'app-admin-report-details',
   standalone: true,
@@ -12,7 +12,7 @@ import { ReportService } from '../../serviecs/report.service';
   styleUrls: ['./admin-report-details.component.scss']
 })
 export class AdminReportDetailsComponent implements OnInit {
-  report: any;
+  report: Report | null = null;
   note = '';
 
   constructor(
