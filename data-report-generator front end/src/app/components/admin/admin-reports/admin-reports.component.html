@@ -1,22 +1,55 @@
-<h2 class="mt-4">📄 All Reports</h2>
+<div class="container py-4">
+  <h2 class="text-center mb-4">📁 All Reports (Admin View)</h2>
 
-<table class="table table-bordered mt-3">
-  <thead class="table-dark">
-    <tr>
-      <th>ID</th>
-      <th>User</th>
-      <th>Created</th>
-      <th>PDF</th>
-      <th>Delete</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let r of list">
-      <td>{{ r.id }}</td>
-      <td>{{ r.email }}</td>
-      <td>{{ r.created_at | date:'short' }}</td>
-      <td><a [href]="r.pdfUrl" target="_blank" class="btn btn-sm btn-outline-primary">Download</a></td>
-      <td><button (click)="delete(r.id)" class="btn btn-sm btn-danger">🗑️</button></td>
-    </tr>
-  </tbody>
-</table>
+  <div *ngIf="loading" class="text-center py-4">
+    <div class="spinner-border text-primary" role="status"></div>
+    <p class="mt-2">Loading reports...</p>
+  </div>
+
+  <table *ngIf="!loading && list.length" class="table table-hover align-middle">
+    <thead class="table-primary">
+      <tr>
+        <th>#</th>
+        <th>Prompt</th>
+        <th>Email</th>
+        <th>Date</th>
+        <th>PDF</th>
+        <th class="text-center">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let report of list; let i = index">
+        <td>{{ i + 1 }}</td>
+        <td>{{ report.prompt }}</td>
+        <td>{{ report.email }}</td>
+        <td>{{ report.created_at | date: 'medium' }}</td>
+        <td class="text-center">
+          <a *ngIf="report.pdf_path"
+             class="btn btn-success btn-sm"
+             [href]="getPdfUrl(report.pdf_path)"
+             target="_blank"
+             download>
+             ⬇️ Download
+          </a>
+        </td>
+        <td class="text-center">
+          <div class="d-flex justify-content-center gap-2">
+           
+            <button class="btn btn-outline-primary btn-sm" (click)="viewReport2(report.id)">
+              👁️ View
+            </button>
+
+            
+            <button class="btn btn-outline-danger btn-sm" (click)="delete(report.id)">
+              🗑️ Delete
+            </button>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div *ngIf="!loading && !list.length" class="text-center text-muted py-5">
+    <p>No reports found.</p>
+  </div>
+</div>

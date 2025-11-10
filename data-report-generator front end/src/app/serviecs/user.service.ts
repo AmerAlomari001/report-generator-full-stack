@@ -7,6 +7,9 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class UserService {
+  getAll() {
+    throw new Error('Method not implemented.');
+  }
 
   private baseUrl = `${environment.apiUrl}/api/admin/users`;
 

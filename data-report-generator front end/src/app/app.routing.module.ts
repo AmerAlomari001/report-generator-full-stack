@@ -27,23 +27,32 @@ const routes: Routes = [
   // User (Protected)
   { path: 'upload', component: UploadComponent, canActivate: [UserGuard] },
   { path: 'history', component: HistoryComponent, canActivate: [UserGuard] },
-  { path: 'report', component: ReportComponent, canActivate: [UserGuard] },
+  // { path: 'report', component: ReportComponent, canActivate: [UserGuard] },
+  { path: 'report', component: ReportComponent },
+
   { path: 'chart', component: ChartComponent, canActivate: [UserGuard] },
   { path: 'csv-preview', component: CsvPreviewComponent, canActivate: [UserGuard] },
 
   // Admin (Protected)
   {
-    path: 'admin',
-    canActivate: [AdminGuard],
-    children: [
-      { path: '', component: AdminDashboardComponent }, // default
-      { path: 'reports', component: AdminReportsComponent },
-      { path: 'users', component: AdminUsersComponent }
-    ]
-  },
+  path: 'admin',
+  canActivate: [AdminGuard],
+  children: [
+    { path: '', component: AdminDashboardComponent }, // default
+    { path: 'reports', component: AdminReportsComponent },
+    { 
+      path: 'reports/:id',   // ✅ صفحة تفاصيل التقرير
+      loadComponent: () =>
+        import('./components/admin/admin-report-details/admin-report-details.component')
+          .then(m => m.AdminReportDetailsComponent)
+    },
+    { path: 'users', component: AdminUsersComponent }
+  ]
+}
 
-  // Wildcard
-  { path: '**', redirectTo: 'login' }
+ 
+
+  
 ];
 
 @NgModule({

@@ -1,74 +1,50 @@
-<div class="container mt-4">
-  <h2 class="mb-3">👥 Users Management</h2>
+<div class="container py-5">
+  <h2 class="text-center mb-4">👥 Manage Users</h2>
 
-  <div *ngIf="loading" class="text-center p-4">Loading...</div>
+  <div *ngIf="loading" class="text-center">
+    <div class="spinner-border text-primary" role="status"></div>
+    <p>Loading users...</p>
+  </div>
 
-  <table *ngIf="!loading" class="table table-bordered table-striped">
-    <thead class="table-dark">
+  <table *ngIf="!loading && users.length" class="table table-striped align-middle">
+    <thead class="table-primary">
       <tr>
-        <th>ID</th>
+        <th>#</th>
         <th>Username</th>
         <th>Email</th>
         <th>Role</th>
-        <th>Status</th>
-        <th>Actions</th>
+        <th class="text-center">Actions</th>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let u of users">
-        <td>{{ u.id }}</td>
-        <td>{{ u.username }}</td>
-        <td>{{ u.email }}</td>
-
+      <tr *ngFor="let user of users; let i = index">
+        <td>{{ i + 1 }}</td>
+        <td>{{ user.username }}</td>
+        <td>{{ user.email }}</td>
         <td>
-          <select class="form-select form-select-sm" [(ngModel)]="u.role" (change)="changeRole(u)">
-            <option value="user">User</option>
-            <option value="admin">Admin</option>
-          </select>
-        </td>
-
-        <!-- ✅ حالة الموافقة -->
-        <td>
-          <span 
-            class="badge" 
+          <span
+            class="badge"
             [ngClass]="{
-              'bg-secondary': u.isApproved === 0,
-              'bg-success': u.isApproved === 1,
-              'bg-danger': u.isApproved === -1
-            }">
-            {{
-              u.isApproved === 0
-                ? 'Pending'
-                : u.isApproved === 1
-                ? 'Approved'
-                : 'Rejected'
-            }}
+              'bg-success': user.role === 'admin',
+              'bg-secondary': user.role === 'user'
+            }"
+          >
+            {{ user.role }}
           </span>
         </td>
-
-        <td>
-          <!-- ✅ أزرار التحكم -->
-          <button
-            *ngIf="u.isApproved === 0"
-            class="btn btn-success btn-sm me-2"
-            (click)="approveUser(u.id, true)">
-            Approve
+        <td class="text-center">
+          <button class="btn btn-sm btn-outline-primary me-2" (click)="changeRole(user)">
+            🔁 Change Role
           </button>
-
-          <button
-            *ngIf="u.isApproved === 0"
-            class="btn btn-warning btn-sm me-2"
-            (click)="approveUser(u.id, false)">
-            Reject
-          </button>
-
-          <button
-            class="btn btn-danger btn-sm"
-            (click)="deleteUser(u.id)">
-            Delete
+          <button class="btn btn-sm btn-outline-danger" (click)="deleteUser(user.id)">
+            🗑️ Delete
           </button>
         </td>
       </tr>
     </tbody>
   </table>
+
+  <div *ngIf="!loading && !users.length" class="text-center text-muted py-5">
+    <p>No users found.</p>
+  </div>
 </div>

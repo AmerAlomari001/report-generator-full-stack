@@ -2,40 +2,35 @@
   <h2 class="text-center mb-4">Admin Dashboard</h2>
 
   <div class="row text-center">
-    <div class="col-md-4">
+    <!-- Total Reports -->
+    <div class="col-md-6">
       <div class="card shadow-sm border-primary mb-3">
         <div class="card-body">
           <h5 class="card-title">Total Reports</h5>
-          <p class="display-6 text-primary">{{ total }}</p>
+          <p class="display-6 text-primary">{{ totalReports }}</p>
         </div>
       </div>
     </div>
 
-    <div class="col-md-4">
-      <div class="card shadow-sm border-warning mb-3">
-        <div class="card-body">
-          <h5 class="card-title">Pending Reports</h5>
-          <p class="display-6 text-warning">{{ pending }}</p>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-md-4">
+    <!-- Total Users -->
+    <div class="col-md-6">
       <div class="card shadow-sm border-success mb-3">
         <div class="card-body">
-          <h5 class="card-title">Approved Reports</h5>
-          <p class="display-6 text-success">{{ approved }}</p>
+          <h5 class="card-title">Total Users</h5>
+          <p class="display-6 text-success">{{ totalUsers }}</p>
         </div>
       </div>
     </div>
   </div>
 
+
   <div class="text-center mt-4">
 <button class="btn btn-primary btn-lg" (click)="goToReports()">View All Reports</button>
 
   <div class="mt-4 d-flex gap-2">
-    <button class="btn btn-outline-primary" (click)="goToReports()">Manage Reports</button>
 
+  <div class="text-center mt-4 d-flex justify-content-center gap-2">
+    <button class="btn btn-outline-primary" (click)="goToReports()">Manage Reports</button>
     <button class="btn btn-outline-secondary" (click)="goToUsers()">Manage Users</button>
   </div>
 </div>

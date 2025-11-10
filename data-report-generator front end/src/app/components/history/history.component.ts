@@ -45,7 +45,9 @@ export class HistoryComponent implements OnInit {
           this.router.navigate(['/admin/reports', id], { state: { report: r } });
         } else {
           localStorage.setItem('selectedReport', JSON.stringify(r));
-          this.router.navigate(['/report', id], { state: { report: r } });
+          // this.router.navigate(['/report', id], { state: { report: r } });
+          this.router.navigate(['/report']);
+
         }
       },
       error: (err) => {

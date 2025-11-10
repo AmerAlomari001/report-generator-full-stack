@@ -1,28 +1,50 @@
-<div class="container py-4">
-  <button class="btn btn-link mb-2" (click)="back()">← Back</button>
-  <h4>Report Review</h4>
+<div class="container py-4" *ngIf="!loading && report">
+  <button class="btn btn-link mb-3" (click)="back()">← Back</button>
 
-  <div *ngIf="report" class="card p-3 shadow-sm">
-    <h5>{{ report.title }}</h5>
-    <p class="text-muted">{{ report.prompt }}</p>
-    <p>{{ report.report }}</p>
+  <h3 class="mb-3 text-primary">📝 Report Review</h3>
 
-    <div class="mt-3">
-      <label class="form-label">Admin Note</label>
+  <div class="card p-3 shadow-sm">
+    <h5 class="mb-2">{{ report.prompt }}</h5>
+    <p class="text-muted mb-2"><strong>Email:</strong> {{ report.email }}</p>
+
+    <hr />
+
+    <div class="bg-light p-3 rounded mb-3">
+      <h6>📄 Report Content</h6>
+      <pre class="p-2">{{ report.report || 'No report text available.' }}</pre>
+    </div>
+
+    <div class="mt-3" *ngIf="report.pdf_path">
+      <a [href]="'http://localhost:5001' + report.pdf_path"
+         class="btn btn-success"
+         target="_blank"
+         download>
+        ⬇️ Download PDF
+      </a>
+    </div>
+
+    <div class="mt-4">
+      <label class="form-label fw-bold">Admin Note</label>
       <textarea
         class="form-control"
         rows="3"
         [(ngModel)]="note"
-        placeholder="Write your feedback here..."
-      ></textarea>
+        placeholder="Write your feedback here..."></textarea>
 
       <div class="mt-3 d-flex gap-2">
-        <button class="btn btn-success" (click)="approve()">Approve</button>
-        <button class="btn btn-danger" (click)="reject()">Reject</button>
         <button class="btn btn-outline-secondary" (click)="requestChange()">
           Request Change
+        </button>
+
+        <button *ngIf="isAdmin" class="btn btn-danger" (click)="deleteReport()">
+          Delete
         </button>
       </div>
     </div>
   </div>
+</div>
+
+<div *ngIf="loading" class="text-center py-5">
+  <div class="spinner-border text-primary" role="status"></div>
+  <p>Loading report...</p>
 </div>

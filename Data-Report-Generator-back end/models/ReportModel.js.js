@@ -1,17 +1,18 @@
 const { pool } = require("../db");
 
 const ReportModel = {
-  createReport: async ({ prompt, reportText, filePath, pdfPath, email, chartData }) => {
+createReport: async ({ prompt, report, filePath, pdfPath, email, chartData }) => {
+
     const [result] = await pool.query(
       `INSERT INTO reports (prompt, report, file_path, pdf_path, email, chart_data)
        VALUES (?, ?, ?, ?, ?, ?)`,
       [
         prompt,
-        reportText,          // column: report
-        filePath,            // column: file_path
-        pdfPath,             // column: pdf_path
+        report,        
+        filePath,            
+        pdfPath,             
         email,
-        JSON.stringify(chartData) // column: chart_data (JSON)
+        JSON.stringify(chartData) 
       ]
     );
 
