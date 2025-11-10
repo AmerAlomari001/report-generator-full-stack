@@ -1,6 +1,5 @@
 const AdminModel = require("../models/Admin.js");
 const UserModel = require("../models/User");
-const ReportModel = require("../models/ReportModel.js");
 
 const AdminService = {
   getAllUsers: async () => {
@@ -45,7 +44,7 @@ const AdminService = {
     return true;
   },
 
-  approveUser: async (id, isApproved) => {
+ /* approveUser: async (id, isApproved) => {
     const user = await UserModel.findById(id);
     if (!user) {
       const e = new Error("User not found");
@@ -55,7 +54,7 @@ const AdminService = {
 
     await AdminModel.updateUserApproval(id, isApproved);
     return { message: isApproved ? "User approved" : "User rejected" };
-  },
+  },*/
 };
 
 module.exports = AdminService;

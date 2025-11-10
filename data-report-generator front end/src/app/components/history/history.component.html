@@ -16,6 +16,7 @@
             <th class="text-center">PDF</th>
           </tr>
         </thead>
+
         <tbody>
           <tr *ngFor="let report of reports; let i = index">
             <td>{{ i + 1 }}</td>
@@ -25,23 +26,25 @@
 
             <td class="text-center">
               <button 
-                class="btn btn-sm btn-outline-primary me-2" 
+                class="btn btn-sm btn-outline-primary me-2"
                 (click)="viewReport(report.id)">
                 👁️ View
               </button>
 
               <button 
-                class="btn btn-sm btn-outline-danger" 
+                class="btn btn-sm btn-outline-danger"
                 (click)="deleteReport(report.id)">
                 🗑️ Delete
               </button>
             </td>
 
             <td class="text-center">
-              <a *ngIf="report.pdfPath" 
-                 class="btn btn-sm btn-success px-3" 
-                 [href]="getPdfUrl(report.pdfPath)" 
-                 target="_blank" download>
+              <a 
+                *ngIf="report.pdf_path || report.pdfPath"
+                class="btn btn-sm btn-success px-3"
+                [href]="getPdfUrl(report.pdf_path || report.pdfPath)"
+                target="_blank"
+                download>
                 ⬇️ PDF
               </a>
             </td>

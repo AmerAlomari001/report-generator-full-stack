@@ -23,7 +23,7 @@ const AdminController = {
     }
   },
 
-  approveUser: async (req, res) => {
+  /*approveUser: async (req, res) => {
     try {
       const { id } = req.params;
       const { isApproved } = req.body;
@@ -34,7 +34,7 @@ const AdminController = {
       console.error("❌ approveUser error:", error);
       res.status(500).json({ error: "Failed to update approval", detail: error.message });
     }
-  },
+  },*/
 
   updateUserRole: async (req, res) => {
     const { id } = req.params;
