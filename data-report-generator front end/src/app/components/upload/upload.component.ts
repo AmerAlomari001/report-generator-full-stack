@@ -9,12 +9,14 @@ import * as XLSX from 'xlsx';
   selector: 'app-upload',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, CsvPreviewComponent, FormsModule],
-  templateUrl: './upload.component.html'
+  templateUrl: './upload.component.html',
+  styleUrls: ['./upload.component.scss']
 })
 export class UploadComponent {
   prompt = new FormControl('');
   uploadedSummary: any = null;
-selectedFile: File | null = null;
+  selectedFile: File | null = null;
+  loading = false; // ✅ لودينج سبينر  
 
   constructor(private data: DataService) {}
 
@@ -58,23 +60,26 @@ selectedFile: File | null = null;
     }
   }
 
- sendToAI() {
-  if (!this.uploadedSummary || !this.prompt.value || !this.selectedFile) return;
+  sendToAI() {
+    if (!this.uploadedSummary || !this.prompt.value || !this.selectedFile) return;
 
-  const formData = new FormData();
-  formData.append('file', this.selectedFile);
-  formData.append('prompt', this.prompt.value);
+    const formData = new FormData();
+    formData.append('file', this.selectedFile);
+    formData.append('prompt', this.prompt.value);
 
-  this.data.generateReport(formData).subscribe({
-    next: (res: any) => {
-      alert('✅ Report generated. Check history.');
-      console.log("✅ PDF URL:", res.pdfUrl);  // ← مهم للتأكد
-    },
-    error: (err) => {
-      console.error(err);
-      alert('❌ Failed to generate report');
-    }
-  });
-}
+    this.loading = true; 
 
+    this.data.generateReport(formData).subscribe({
+      next: (res: any) => {
+        this.loading = false; 
+        alert('✅ Report generated. Check history.');
+        console.log("✅ PDF URL:", res.pdfUrl);
+      },
+      error: (err) => {
+        this.loading = false; 
+        console.error(err);
+        alert('❌ Failed to generate report');
+      }
+    });
+  }
 }

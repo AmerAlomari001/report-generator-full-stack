@@ -1,44 +1,40 @@
 const { pool } = require("../db");
 
 const ReportModel = {
+  createReport: async ({ prompt, reportText, filePath, pdfPath, email, chartData }) => {
+    const [result] = await pool.query(
+      `INSERT INTO reports (prompt, report, file_path, pdf_path, email, chart_data)
+       VALUES (?, ?, ?, ?, ?, ?)`,
+      [
+        prompt,
+        reportText,          // column: report
+        filePath,            // column: file_path
+        pdfPath,             // column: pdf_path
+        email,
+        JSON.stringify(chartData) // column: chart_data (JSON)
+      ]
+    );
 
-async createReport({ prompt, reportText, filePath, pdfPath, email,chartData  }) {
-  const query = `
-    INSERT INTO reports (prompt, report, file_path, pdf_path, email,chart_data)
-    VALUES (?, ?, ?, ?, ?,?)
-  `;
-  const [result] = await pool.query(query, [prompt, reportText, filePath, pdfPath, email,JSON.stringify(chartData)]) //]);
-  return result.insertId;
-},
+    return result.insertId;
+  },
 
- async getReports(email) {
-  const [rows] = await pool.query(
-    `SELECT * FROM reports WHERE email = ? ORDER BY created_at DESC`,
-    [email]
-  );
-  
-  return rows.map(row => ({
-    ...row,
-    chartData: typeof row.chart_data === "string"
-      ? JSON.parse(row.chart_data)
-      : row.chart_data,
-  }));
-},
+  getReports: async (email) => {
+    const [rows] = await pool.query(
+      `SELECT * FROM reports WHERE email = ? ORDER BY created_at DESC`,
+      [email]
+    );
+    return rows;
+  },
 
+  getReportById: async (id) => {
+    const [rows] = await pool.query(`SELECT * FROM reports WHERE id = ?`, [id]);
+    return rows[0];
+  },
 
-async deleteReport(id) {
-  const [rows] = await pool.query(
-    "SELECT * FROM reports WHERE id = ? ",
-    [id]
-  );
-  
-
-  await pool.query("DELETE FROM reports WHERE id = ?", [id]);
-
-  return true; 
-}
-
-
+  deleteReport: async (id) => {
+    const [result] = await pool.query(`DELETE FROM reports WHERE id = ?`, [id]);
+    return result.affectedRows > 0;
+  },
 };
 
 module.exports = ReportModel;

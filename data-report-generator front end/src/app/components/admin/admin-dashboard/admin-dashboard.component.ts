@@ -1,36 +1,43 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
-import { ReportService } from '../../serviecs/report.service';
+import { ReportService } from '../../../serviecs/report.service';
+import { Router, RouterModule } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-admin-dashboard',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule, FormsModule],
   templateUrl: './admin-dashboard.component.html',
-  styleUrls: ['./admin-dashboard.component.scss']
 })
 export class AdminDashboardComponent implements OnInit {
   total = 0;
   pending = 0;
   approved = 0;
+  rejected = 0;
+  loading = true;
 
   constructor(private rs: ReportService, private router: Router) {}
 
   ngOnInit() {
-    this.rs.getAll().subscribe({
-      next: (reports:any) => {
-        this.total = reports.length;
-        this.pending = reports.filter((r: any) => r.status === 'pending').length;
-        this.approved = reports.filter((r: any) => r.status === 'approved').length;
-      },
-      error: (err:Error) => {
-        console.error('❌ Error loading reports:', err);
-      }
-    });
+
+
+    this.rs.getAll().subscribe(
+      {next:(reports: any[]) => {
+      
+      this.total = reports.length;
+      this.pending = reports.filter(r => r.status === 'pending').length;
+      this.approved = reports.filter(r => r.status === 'approved').length;
+      this.rejected = reports.filter(r => r.status === 'rejected').length;
+      this.loading = false;
+      }    });
   }
 
-  goReports() {
+  goToReports() {
     this.router.navigate(['/admin/reports']);
+  }
+
+   goToUsers() {
+    this.router.navigate(['/admin/users']);
   }
 }

@@ -24,7 +24,8 @@ app.use("/api/reports", reportRoutes);
 const userRoutes = require("./routes/user");
 app.use("/api/user", userRoutes);
 
-
+const adminRoutes = require("./routes/admin");
+app.use("/api/admin", adminRoutes);
 
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => {

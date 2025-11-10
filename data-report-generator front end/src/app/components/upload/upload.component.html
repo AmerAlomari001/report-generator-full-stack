@@ -1,5 +1,14 @@
-<div class="card p-3">
+<div class="card p-3 position-relative">
   <h5>Upload CSV / Excel</h5>
+
+  <!-- 🚀 Loading Spinner -->
+  <div *ngIf="loading" class="loading-overlay">
+    <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <p class="mt-3 text-light">Generating report, please wait...</p>
+  </div>
+
   <div class="mb-3">
     <input type="file" class="form-control" (change)="onFileChange($event)" accept=".csv, .xlsx, .xls" />
   </div>
@@ -10,7 +19,7 @@
   </div>
 
   <div class="mb-3">
-    <button class="btn btn-primary" (click)="sendToAI()">Generate Report</button>
+    <button class="btn btn-primary w-100" [disabled]="loading" (click)="sendToAI()">Generate Report</button>
   </div>
 
   <div *ngIf="uploadedSummary">
