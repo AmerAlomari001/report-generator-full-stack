@@ -17,10 +17,13 @@
       ></textarea>
 
       <div class="mt-3 d-flex gap-2">
-        <button class="btn btn-success" (click)="approve()">Approve</button>
-        <button class="btn btn-danger" (click)="reject()">Reject</button>
         <button class="btn btn-outline-secondary" (click)="requestChange()">
           Request Change
+        </button>
+
+        
+        <button *ngIf="isAdmin" class="btn btn-danger" (click)="deleteReport()">
+          Delete
         </button>
       </div>
     </div>
